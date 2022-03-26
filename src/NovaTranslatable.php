@@ -52,7 +52,7 @@ class NovaTranslatable extends Field
     {
         parent::__construct($name, $attribute, $resolveCallback);
 
-        $this->locales = array_combine($this->locales, array_map(function ($value) {
+        $this->locales = array_combine(config('translatable.locales'), array_map(function ($value) {
             return __($value);
         }, config('translatable.locales')));
 
