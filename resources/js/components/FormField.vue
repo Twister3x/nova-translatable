@@ -1,10 +1,10 @@
 <template>
     <default-field :field="field" :errors="errors" :show-help-text="showHelpText" full-width-content="true">
         <template slot="field">
-            <a 
-                class="inline-block font-bold cursor-pointer mr-2 animate-text-color select-none" 
+            <a
+                class="inline-block font-bold cursor-pointer mr-2 animate-text-color select-none"
                 :class="{ 'text-60': localeKey !== currentLocale, 'text-primary': localeKey === currentLocale }"
-                :key="`a-${localeKey}`" 
+                :key="`a-${localeKey}`"
                 v-for="(locale, localeKey) in field.locales"
                 @click="changeTab(localeKey)"
             >
@@ -12,19 +12,28 @@
             </a>
 
             <textarea
-                ref="field" 
+                ref="field"
                 :id="field.name"
                 class="mt-4 w-full form-control form-input form-input-bordered py-3 min-h-textarea"
                 :class="errorClasses"
                 :placeholder="field.name"
                 v-model="value[currentLocale]"
-                v-if="!field.singleLine && !field.trix && !field.ckeditor && !field.sluggable && !field.code"
+                v-if="!field.singleLine && !field.trix && !field.ckeditor && !field.sluggable && !field.code && !field.grapes"
                 @keydown.tab="handleTab"
             ></textarea>
 
             <div v-if="!field.singleField && field.code" class="mt-4">
                 <code-field
-                    ref="field" 
+                    ref="field"
+                    :field="field"
+                    :value="value[currentLocale]"
+                    @change="handleChange"
+                />
+            </div>
+
+            <div v-if="!field.singleField && field.grapes" class="mt-4">
+                <grapes-field
+                    ref="field"
                     :field="field"
                     :value="value[currentLocale]"
                     @change="handleChange"
@@ -56,7 +65,7 @@
 
             <div v-if="!field.singleField && field.sluggable" class="mt-4 w-full">
                 <input
-                    ref="field" 
+                    ref="field"
                     :id="field.name"
                     type="text"
                     @keyup="handleKeydown"
@@ -71,10 +80,10 @@
                 </p>
             </div>
 
-            <input 
-                ref="field" 
+            <input
+                ref="field"
                 :id="field.name"
-                type="text" 
+                type="text"
                 class="mt-4 w-full form-control form-input form-input-bordered"
                 :class="errorClasses"
                 :placeholder="field.name"
@@ -83,12 +92,12 @@
                 @keydown.tab="handleTab"
             />
 
-            <charcounter 
-                ref="counted" 
-                :currentLocale="currentLocale" 
-                :value="value[currentLocale] || ''" 
-                :max-chars="field.maxChars" 
-                :warning-threshold="field.warningAt" 
+            <charcounter
+                ref="counted"
+                :currentLocale="currentLocale"
+                :value="value[currentLocale] || ''"
+                :max-chars="field.maxChars"
+                :warning-threshold="field.warningAt"
                 v-if="field.counted"></charcounter>
 
             <p v-if="hasError" class="my-2 text-danger">
@@ -100,12 +109,14 @@
 
 <script>
     import Trix from './Trix/Trix'
-    
+
     import VueCkeditor from 'vue-ckeditor2';
 
     import Charcounter from './Charcounter/Charcounter';
-    
+
     import CodeField from './Code/FormField';
+
+    import GrapesField from './Grapes/FormField';
 
     import { FormField, HandlesValidationErrors } from 'laravel-nova'
 
@@ -114,7 +125,7 @@
     export default {
         mixins: [FormField, HandlesValidationErrors],
 
-        components: { Trix, VueCkeditor, Charcounter, CodeField },
+        components: { Trix, VueCkeditor, Charcounter, CodeField, GrapesField },
 
         props: ['resourceName', 'resourceId', 'field'],
 
@@ -156,8 +167,9 @@
              * Update the field's internal value.
              */
             handleChange(value) {
+                var locale = (value.locale) ? value.locale : this.currentLocale
+
                 if (typeof value === "object" && value !== null) {
-                    var locale = (value.locale) ? value.locale : this.currentLocale
                     if (this.value && value.value && locale) {
                         this.value[locale] = value.value
                     }
@@ -177,7 +189,7 @@
                     this.currentLocale = locale;
 
                     this.$nextTick(() => {
-                        if (this.field.trix || this.field.code) {
+                        if (this.field.trix || this.field.code || this.field.grapes) {
                             this.$refs.field.update(this.currentLocale)
                         }
                     })

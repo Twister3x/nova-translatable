@@ -55,7 +55,7 @@ class NovaTranslatable extends Field
         $this->locales = array_combine(config('translatable.locales'), array_map(function ($value) {
             return __($value);
         }, config('translatable.locales')));
-
+        
         $this->locale = config('translatable.locale', 'it');
 
         $this->withMeta([
@@ -194,6 +194,17 @@ class NovaTranslatable extends Field
         $this->fieldType = 'code';
 
         return $this->withMeta(['code' => true]);
+    }
+
+    /**
+     * Use Grapes field.
+     */
+    public function grapes()
+    {
+        $this->fieldType = 'grapes';
+        $this->stacked();
+
+        return $this->withMeta(['grapes' => true]);
     }
 
     /**

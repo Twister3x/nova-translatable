@@ -25,6 +25,8 @@ class FieldServiceProvider extends ServiceProvider
 
             Nova::script('nova-translatable', __DIR__.'/../dist/js/field.js');
             Nova::script('ckeditor', config('nova.ckeditor-field.ckeditor_url', 'https://cdn.ckeditor.com/4.11.3/full-all/ckeditor.js'));
+
+            Nova::style('nova-translatable-grapes', __DIR__.'/../dist/css/editor-styles.css');
         });
 
         $this->publishes([

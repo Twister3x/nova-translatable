@@ -19,4 +19,8 @@ Nova.booting((Vue, router, store) => {
     Vue.component('index-nova-translatable-code-field', require('./components/Code/IndexField'))
     Vue.component('detail-nova-translatable-code-field', require('./components/Code/DetailField'))
     Vue.component('form-nova-translatable-code-field', require('./components/Code/FormField'))
+
+    Vue.component('index-nova-translatable-grapes-field', require('./components/Grapes/IndexField'))
+    Vue.component('detail-nova-translatable-grapes-field', require('./components/Grapes/DetailField'))
+    Vue.component('form-nova-translatable-grapes-field', require('./components/Grapes/FormField'))
 })
