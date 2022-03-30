@@ -55,7 +55,7 @@ class NovaTranslatable extends Field
         $this->locales = array_combine(config('translatable.locales'), array_map(function ($value) {
             return __($value);
         }, config('translatable.locales')));
-        
+
         $this->locale = config('translatable.locale', 'it');
 
         $this->withMeta([
@@ -269,6 +269,17 @@ class NovaTranslatable extends Field
         return $this->withMeta([
             'sluggable' => true,
             'slug'      => $slugField,
+        ]);
+    }
+
+    /**
+     * WARNING! This is for native Laravel's Slug only (not this package's implementation)
+     * Use only this locale as source for slug
+     */
+    public function slugLocale(string $locale)
+    {
+        return $this->withMeta([
+            'slugLocale' => $locale
         ]);
     }
 

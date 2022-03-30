@@ -89,6 +89,7 @@
                 :placeholder="field.name"
                 v-model="value[currentLocale]"
                 v-if="field.singleLine"
+                @keyup="handleKeydownField"
                 @keydown.tab="handleTab"
             />
 
@@ -215,6 +216,16 @@
                 Nova.$emit('field-update-' + this.slugField, {
                     value: event.target.value
                 })
+            },
+
+            handleKeydownField(event) {
+                if (this.field.slugLocale && this.currentLocale !== this.field.slugLocale) {
+                    return;
+                }
+
+                const fieldName = this.field.name.toLowerCase();
+
+                Nova.$emit(`${fieldName}-change`, event.target.value)
             },
         },
 
